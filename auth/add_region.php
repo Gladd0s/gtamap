@@ -104,6 +104,8 @@
 		$stmt->bindValue(':y_pos', $point[1], SQLITE3_FLOAT);
 
 		$stmt->execute();
+
+		$indx++;
 		}
 
 		echo "OK";

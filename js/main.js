@@ -69,19 +69,38 @@ xhr.open("GET", "markers.php");
 xhr.responseType = "json";
 xhr.send();
 
-var xhr = new XMLHttpRequest();
-xhr.onload = function() {
+var gangs_xhr = new XMLHttpRequest();
+gangs_xhr.onload = function(){
+
 	console.log(this.response);
 
-	this.response.forEach(function(region){
-		var polygon = L.polygon(region["points"], {color: 'red'}).addTo(map);
+	var gangs_cfg = { };
+	var gangs = [];
 
-		//map.fitBounds(polygon.getBounds());
-		polygon.bindPopup(region["name"]);
-	}, this);
-}
-xhr.open("GET", "regions.php");
-xhr.responseType = "json";
-xhr.send();
+	this.response.forEach(function(gang_info){
+			gangs.push(gangs_cfg[gang_info["name"]] = L.layerGroup().addTo(map));
+			}, this);
+
+	L.control.layers(null, gangs_cfg).addTo(map);
+
+	var regions_xhr = new XMLHttpRequest();
+	regions_xhr.onload = function() {
+		console.log(this.response);
+
+		this.response.forEach(function(region){	
+			var polygon = L.polygon(region["points"], {color: 'red'}).addTo(map);
+			gangs[region["owner"] - 1].addLayer(polygon);
+
+			polygon.bindPopup(region["name"]);
+				}, this);
+	}
+	regions_xhr.open("GET", "regions.php");
+	regions_xhr.responseType = "json";
+	regions_xhr.send();
+};
+
+gangs_xhr.open("GET", "gangs.php");
+gangs_xhr.responseType = "json";
+gangs_xhr.send();
 
 // PANELER Å SKIT
