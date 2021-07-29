@@ -1,0 +1,3 @@
+[submodule "vendor/Leaflet.MousePosition"]
+	path = vendor/Leaflet.MousePosition
+	url = https://github.com/ardhi/Leaflet.MousePosition.git
